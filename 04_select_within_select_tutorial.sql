@@ -5,21 +5,21 @@ WHERE population >
 (
   SELECT population FROM world
   WHERE name='Russia'
+   
 )
 
--- 2. List the name and continent of countries in the continents containing
--- 'Belize', 'Belgium'.
-SELECT a.name country, a.continent
-FROM world a
-WHERE a.continent IN
+-- 2. Show the countries in Europe with a per capita GDP greater than 'United Kingdom'.
+
+SELECT name
+FROM world
+WHERE continent = 'Europe' AND gdp/population> 
 (
-  SELECT b.continent
-  FROM world b
-  WHERE b.name IN ('Belize', 'Belgium')
+SELECT gdp/population
+FROM world
+WHERE name = 'United Kingdom'
 )
+-- or
 
--- 3. Show the countries in Europe with a per capita GDP greater than
--- 'United Kingdom'.
 SELECT a.name country
 FROM world a
 WHERE a.continent = 'Europe'
@@ -29,6 +29,18 @@ AND a.gdp/a.population >
   FROM world b
   WHERE b.name = 'United Kingdom'
 )
+
+-- 3. List the name and continent of countries in the continents containing either Argentina or Australia. Order by name of the country.
+
+SELECT a.name country, a.continent
+FROM world a
+WHERE a.continent IN (
+
+SELECT b.continent
+FROM world b
+WHERE b.name IN ('Argentina','Australia' )
+)
+ORDER BY country
 
 -- 4. Which country has a population that is more than Canada but less than
 -- Poland? Show the name and the population.
@@ -47,16 +59,29 @@ AND a.population <
   WHERE c.name = 'Poland'
 )
 
+-- 5. Germany (population 80 million) has the largest population of the countries in Europe. Austria (population 8.5 million) has 11% of the population of Germany. Show the name and the population of each country in Europe. Show the population as a percentage of the population of Germany.
+
+SELECT name, CONCAT(ROUND(100*population/
+                          (SELECT population 
+                             FROM world
+                                WHERE name = 'Germany')), '%')
+FROM world 
+WHERE continent = 'Europe'
+
+
+
+
 -- 5. Which countries have a GDP greater than any country in Europe? [Give the
--- name only.]
+-- name only.](Some countries may have NULL gdp values) *****THIS ONE CANT FIGURE OUT***START HERE***
 SELECT a.name country
 FROM world a
 WHERE a.gdp > ALL
-(
-  SELECT b.gdp
-  FROM world b
-  WHERE b.continent = 'Europe'
-)
+                (
+                  SELECT b.gdp
+                  FROM world b
+                  WHERE b.continent = 'Europe'
+                  AND b.population>0
+                )
 
 -- 6. Find the largest country (by area) in each continent, show the continent,
 -- the name and the area:
