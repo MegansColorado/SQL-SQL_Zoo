@@ -72,7 +72,7 @@ WHERE continent = 'Europe'
 
 
 -- 5. Which countries have a GDP greater than any country in Europe? [Give the
--- name only.](Some countries may have NULL gdp values) *****THIS ONE CANT FIGURE OUT***START HERE***
+-- name only.](Some countries may have NULL gdp values) ***START HERE***
 SELECT a.name country
 FROM world a
 WHERE a.gdp > ALL
@@ -80,10 +80,10 @@ WHERE a.gdp > ALL
                   SELECT b.gdp
                   FROM world b
                   WHERE b.continent = 'Europe'
-                  AND b.population>0
+                  AND b.gdp IS NOT NULL
                 )
 
--- 6. Find the largest country (by area) in each continent, show the continent,
+-- 6. ***START HERE*** Find the largest country (by area) in each continent, show the continent,
 -- the name and the area:
 SELECT continent, name country, area
 FROM world x
